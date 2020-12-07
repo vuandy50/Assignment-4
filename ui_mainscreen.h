@@ -13,14 +13,13 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QScrollBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
-#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -89,9 +88,6 @@ public:
     QFrame *line_4;
     QLabel *message;
     QWidget *cart;
-    QWidget *verticalLayoutWidget;
-    QVBoxLayout *verticalLayout;
-    QScrollBar *verticalScrollBar;
     QLabel *label_2;
     QLabel *label_7;
     QLabel *label_8;
@@ -113,6 +109,13 @@ public:
     QLabel *timeUnit;
     QLabel *timeRemain;
     QPushButton *end;
+    QListWidget *listWidget;
+    QLabel *label_10;
+    QLabel *label_11;
+    QLabel *label_12;
+    QListWidget *listWidget2;
+    QListWidget *remove;
+    QLabel *notify;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -125,7 +128,7 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 0, 661, 411));
+        tabWidget->setGeometry(QRect(0, 1, 661, 931));
         ads = new QWidget();
         ads->setObjectName(QString::fromUtf8("ads"));
         tabWidget->addTab(ads, QString());
@@ -338,27 +341,9 @@ public:
         tabWidget->addTab(menu, QString());
         cart = new QWidget();
         cart->setObjectName(QString::fromUtf8("cart"));
-        verticalLayoutWidget = new QWidget(cart);
-        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(70, 60, 251, 211));
-        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        verticalScrollBar = new QScrollBar(verticalLayoutWidget);
-        verticalScrollBar->setObjectName(QString::fromUtf8("verticalScrollBar"));
-        verticalScrollBar->setLayoutDirection(Qt::LeftToRight);
-        verticalScrollBar->setSingleStep(1);
-        verticalScrollBar->setSliderPosition(0);
-        verticalScrollBar->setOrientation(Qt::Vertical);
-        verticalScrollBar->setInvertedAppearance(false);
-        verticalScrollBar->setInvertedControls(true);
-
-        verticalLayout->addWidget(verticalScrollBar);
-
         label_2 = new QLabel(cart);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(70, 20, 251, 31));
+        label_2->setGeometry(QRect(40, 20, 251, 31));
         label_2->setLayoutDirection(Qt::LeftToRight);
         label_2->setFrameShape(QFrame::Box);
         label_2->setAlignment(Qt::AlignCenter);
@@ -373,16 +358,16 @@ public:
         label_9->setGeometry(QRect(70, 320, 51, 16));
         subtotal = new QLabel(cart);
         subtotal->setObjectName(QString::fromUtf8("subtotal"));
-        subtotal->setGeometry(QRect(240, 280, 81, 16));
+        subtotal->setGeometry(QRect(260, 280, 61, 16));
         subtotal->setLayoutDirection(Qt::LeftToRight);
         subtotal->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         tax = new QLabel(cart);
         tax->setObjectName(QString::fromUtf8("tax"));
-        tax->setGeometry(QRect(240, 300, 81, 16));
+        tax->setGeometry(QRect(260, 300, 61, 16));
         tax->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         total = new QLabel(cart);
         total->setObjectName(QString::fromUtf8("total"));
-        total->setGeometry(QRect(240, 320, 81, 16));
+        total->setGeometry(QRect(260, 320, 61, 16));
         total->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         line_5 = new QFrame(cart);
         line_5->setObjectName(QString::fromUtf8("line_5"));
@@ -399,50 +384,81 @@ public:
         line_6->setFrameShadow(QFrame::Sunken);
         line_7 = new QFrame(cart);
         line_7->setObjectName(QString::fromUtf8("line_7"));
-        line_7->setGeometry(QRect(350, 20, 16, 351));
+        line_7->setGeometry(QRect(370, 20, 16, 351));
         line_7->setFrameShape(QFrame::VLine);
         line_7->setFrameShadow(QFrame::Sunken);
         makingOrder = new QLabel(cart);
         makingOrder->setObjectName(QString::fromUtf8("makingOrder"));
-        makingOrder->setGeometry(QRect(380, 20, 251, 31));
+        makingOrder->setGeometry(QRect(390, 20, 251, 31));
         makingOrder->setLayoutDirection(Qt::LeftToRight);
         makingOrder->setFrameShape(QFrame::Box);
         makingOrder->setAlignment(Qt::AlignCenter);
         progressBar = new QProgressBar(cart);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
-        progressBar->setGeometry(QRect(380, 80, 251, 23));
+        progressBar->setGeometry(QRect(390, 80, 251, 23));
         progressBar->setValue(24);
         progress = new QLabel(cart);
         progress->setObjectName(QString::fromUtf8("progress"));
-        progress->setGeometry(QRect(380, 60, 211, 16));
+        progress->setGeometry(QRect(390, 60, 211, 16));
         estTime = new QLabel(cart);
         estTime->setObjectName(QString::fromUtf8("estTime"));
-        estTime->setGeometry(QRect(380, 110, 221, 16));
+        estTime->setGeometry(QRect(390, 110, 221, 16));
         orderReceived = new QPushButton(cart);
         orderReceived->setObjectName(QString::fromUtf8("orderReceived"));
-        orderReceived->setGeometry(QRect(380, 130, 251, 23));
+        orderReceived->setGeometry(QRect(390, 130, 251, 23));
         hourLimit = new QLabel(cart);
         hourLimit->setObjectName(QString::fromUtf8("hourLimit"));
-        hourLimit->setGeometry(QRect(370, 220, 271, 20));
+        hourLimit->setGeometry(QRect(380, 220, 271, 20));
         hourLimit->setAlignment(Qt::AlignCenter);
         timer = new QLabel(cart);
         timer->setObjectName(QString::fromUtf8("timer"));
-        timer->setGeometry(QRect(380, 270, 251, 51));
+        timer->setGeometry(QRect(390, 270, 251, 51));
         timer->setFrameShape(QFrame::Box);
         timer->setLineWidth(5);
         timer->setMidLineWidth(0);
         timer->setAlignment(Qt::AlignCenter);
         timeUnit = new QLabel(cart);
         timeUnit->setObjectName(QString::fromUtf8("timeUnit"));
-        timeUnit->setGeometry(QRect(386, 320, 241, 16));
+        timeUnit->setGeometry(QRect(390, 320, 241, 16));
         timeUnit->setAlignment(Qt::AlignCenter);
         timeRemain = new QLabel(cart);
         timeRemain->setObjectName(QString::fromUtf8("timeRemain"));
-        timeRemain->setGeometry(QRect(376, 250, 251, 20));
+        timeRemain->setGeometry(QRect(380, 250, 251, 20));
         timeRemain->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         end = new QPushButton(cart);
         end->setObjectName(QString::fromUtf8("end"));
-        end->setGeometry(QRect(380, 350, 251, 23));
+        end->setGeometry(QRect(390, 350, 251, 23));
+        listWidget = new QListWidget(cart);
+        listWidget->setObjectName(QString::fromUtf8("listWidget"));
+        listWidget->setGeometry(QRect(10, 80, 231, 191));
+        listWidget->setLayoutDirection(Qt::LeftToRight);
+        listWidget->setItemAlignment(Qt::AlignJustify);
+        label_10 = new QLabel(cart);
+        label_10->setObjectName(QString::fromUtf8("label_10"));
+        label_10->setGeometry(QRect(240, 280, 16, 16));
+        label_10->setAlignment(Qt::AlignCenter);
+        label_11 = new QLabel(cart);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+        label_11->setGeometry(QRect(240, 300, 16, 16));
+        label_11->setAlignment(Qt::AlignCenter);
+        label_12 = new QLabel(cart);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+        label_12->setGeometry(QRect(240, 320, 16, 16));
+        label_12->setAlignment(Qt::AlignCenter);
+        listWidget2 = new QListWidget(cart);
+        listWidget2->setObjectName(QString::fromUtf8("listWidget2"));
+        listWidget2->setGeometry(QRect(240, 80, 61, 191));
+        listWidget2->setLayoutDirection(Qt::LeftToRight);
+        listWidget2->setItemAlignment(Qt::AlignJustify|Qt::AlignRight|Qt::AlignTrailing);
+        remove = new QListWidget(cart);
+        remove->setObjectName(QString::fromUtf8("remove"));
+        remove->setGeometry(QRect(310, 80, 61, 191));
+        remove->setLayoutDirection(Qt::LeftToRight);
+        remove->setItemAlignment(Qt::AlignJustify);
+        notify = new QLabel(cart);
+        notify->setObjectName(QString::fromUtf8("notify"));
+        notify->setGeometry(QRect(20, 60, 341, 21));
+        notify->setAlignment(Qt::AlignCenter);
         tabWidget->addTab(cart, QString());
         mainScreen->setCentralWidget(centralwidget);
         menubar = new QMenuBar(mainScreen);
@@ -455,7 +471,7 @@ public:
 
         retranslateUi(mainScreen);
 
-        tabWidget->setCurrentIndex(4);
+        tabWidget->setCurrentIndex(5);
 
 
         QMetaObject::connectSlotsByName(mainScreen);
@@ -525,7 +541,7 @@ public:
         total->setText(QCoreApplication::translate("mainScreen", "0.00", nullptr));
         completeOrder->setText(QCoreApplication::translate("mainScreen", "COMPLETE ORDER", nullptr));
         makingOrder->setText(QCoreApplication::translate("mainScreen", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">MAKING YOUR ORDER NOW</span></p></body></html>", nullptr));
-        progress->setText(QCoreApplication::translate("mainScreen", "<html><head/><body><p><span style=\" text-decoration: underline;\">IN PROGRESS</span></p></body></html>", nullptr));
+        progress->setText(QCoreApplication::translate("mainScreen", "<html><head/><body><p>IN PROGRESS</p></body></html>", nullptr));
         estTime->setText(QCoreApplication::translate("mainScreen", "ESTIMATED TIME: ~10 mins", nullptr));
         orderReceived->setText(QCoreApplication::translate("mainScreen", "I RECEIVED MY ORDER", nullptr));
         hourLimit->setText(QCoreApplication::translate("mainScreen", "YOU HAVE A 2 HOUR LIMIT TO EAT AT SUPERSONIC", nullptr));
@@ -533,6 +549,10 @@ public:
         timeUnit->setText(QCoreApplication::translate("mainScreen", "HOUR:MINUTE", nullptr));
         timeRemain->setText(QCoreApplication::translate("mainScreen", "TIME REMAINING:", nullptr));
         end->setText(QCoreApplication::translate("mainScreen", "I HAVE LEFT SUPERSONIC", nullptr));
+        label_10->setText(QCoreApplication::translate("mainScreen", "$", nullptr));
+        label_11->setText(QCoreApplication::translate("mainScreen", "$", nullptr));
+        label_12->setText(QCoreApplication::translate("mainScreen", "$", nullptr));
+        notify->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(cart), QCoreApplication::translate("mainScreen", "CART", nullptr));
     } // retranslateUi
 
