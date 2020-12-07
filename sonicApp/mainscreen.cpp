@@ -397,11 +397,11 @@ void mainScreen::on_tabWidget_currentChanged(int index)
     }
     else if (index == 4)
     {
-        if(turnOnTimer && makingOrder)
+        if(turnOnTimer)
         {
-            if(ui->progressBar->maximum() > time->second())
+            int max = orders->getTime().second() + (orders->getTime().minute() * 60) + (orders->getTime().hour() * 120);
+            if(max > (time->second() + (time->minute() * 60) + (time->hour() * 120)))
             {
-                makingOrder = false;
                 ui->addBurger1->hide();
                 ui->addBurger2->hide();
                 ui->addBurger3->hide();
@@ -452,6 +452,30 @@ void mainScreen::on_tabWidget_currentChanged(int index)
         if(makingOrder)
         {
             ui->remove->hide();
+        }
+        else if(turnOnTimer)
+        {
+            hideMakeOrder();
+            showTimer();
+            orders->calculatePrice();
+            ui->listWidget->clear();
+            ui->listWidget2->clear();
+            ui->remove->clear();
+            for(int i = 0; i < orders->size(); i++)
+            {
+                QListWidgetItem *item = new QListWidgetItem();
+                item->setText(orders->printItem(i));
+                ui->listWidget->addItem(item);
+                QListWidgetItem *cost = new QListWidgetItem();
+                cost->setText(orders->priceLine(i));
+                ui->listWidget2->addItem(cost);
+                QListWidgetItem *removal = new QListWidgetItem();
+                removal->setText("REMOVE");
+                ui->remove->addItem(removal);
+            }
+            ui->subtotal->setText(QString::number(orders->getSubTotal(),'f',2));
+            ui->tax->setText(QString::number(orders->getTax(),'f',2));
+            ui->total->setText(QString::number(orders->getTotal(),'f',2));
         }
         else
         {
@@ -510,6 +534,7 @@ void mainScreen::hideMakeOrder()
     ui->progressBar->hide();
     ui->estTime->hide();
     ui->orderReceived->hide();
+    ui->cancelOrder->hide();
     ui->hourLimit->hide();
     ui->timeRemain->hide();
     ui->timer->hide();
@@ -524,6 +549,7 @@ void mainScreen::showMakeOrder()
     ui->progressBar->show();
     ui->estTime->show();
     ui->orderReceived->show();
+    ui->cancelOrder->show();
 }
 void  mainScreen::showTimer()
 {
@@ -535,46 +561,75 @@ void  mainScreen::showTimer()
 }
 void mainScreen::update()
 {
-    qDebug() << "OKAY";
     *timeOrder = timeOrder->addSecs(1);
 
     if(*timeOrder == orders->getTime())
     {
         timerOrder->stop();
-        ui->progressBar->setValue(timeOrder->second());
+        ui->progressBar->setValue(timeOrder->second() + (timeOrder->minute() * 60) + (timeOrder->hour() * 120));
         ui->progress->setText("COMPLETE");
     }
     double calculate;
-    if(orders->getTime().minute() == 0)
+    if(orders->getTime().hour() - timeOrder->hour() != 0)
     {
-        calculate =  orders->getTime().second() / 60.0;
+        calculate =  orders->getTime().hour() - timeOrder->hour() ;
+        QString timeLeft = "ESTIMATED TIME: ~" + QString::number(calculate) + " hrs";
+        ui->estTime->setText(timeLeft);
     }
-    else
+    else if(orders->getTime().minute() - timeOrder->minute()  != 0)
     {
-        calculate = orders->getTime().minute();
+        calculate =  orders->getTime().minute() - timeOrder->minute();
+        QString timeLeft = "ESTIMATED TIME: ~" + QString::number(calculate) + " mins";
+        ui->estTime->setText(timeLeft);
     }
-
-    QString timeLeft = "ESTIMATED TIME: ~" + QString::number(calculate,'f',0) + " mins";
-    ui->estTime->setText(timeLeft);
-    ui->progressBar->setValue(timeOrder->second());
+    else if (orders->getTime().second() - timeOrder->second() != 0)
+    {
+        calculate = orders->getTime().second() - timeOrder->second();
+        QString timeLeft = "ESTIMATED TIME: ~" + QString::number(calculate) + " secs";
+        ui->estTime->setText(timeLeft);
+    }
+    ui->progressBar->setValue(timeOrder->second() + (timeOrder->minute() * 60) + (timeOrder->hour() * 120));
 
 }
 void mainScreen::on_completeOrder_clicked()
 {
+    ui->completeOrder->hide();
+    ui->notify2->setText("");
     if(orders->size() == 0)
     {
         ui->notify->setText("PLEASE GO TO MENU AND SELECT AN ITEM TO ORDER");
+        ui->completeOrder->show();
     }
     else if(turnOnTimer)
     {
-        ui->progressBar->setRange(0,orders->getTime().second());
-        if(ui->progressBar->maximum() > time->second())
+        ui->notify->setText("");
+        int max = orders->getTime().second() + (orders->getTime().minute() * 60) + (orders->getTime().hour() * 120);
+        if(max > (time->second() + (time->minute() * 60) + (time->hour() * 120)))
         {
-            ui->notify->setText("NOT ENOUGH TIME TO COMPLETE ORDER");
+            ui->completeOrder->hide();
+            ui->notify->setText("CANNOT COMPLETE ORDER IN TIME");
+        }
+        else
+        {
+            showMakeOrder();
+            makingOrder = true;
+            on_tabWidget_currentChanged(5);
+
+            orders->addTime();
+
+
+            timeOrder = new QTime(0,0,0);
+            timerOrder = new QTimer(this);
+
+            int max = orders->getTime().second() + (orders->getTime().minute() * 60) + (orders->getTime().hour() * 120);
+            ui->progressBar->setRange(0, max);
+            connect(timerOrder,SIGNAL(timeout()),this,SLOT(update()));
+            timerOrder->start(1000);
         }
     }
     else
     {
+        ui->notify->setText("");
         showMakeOrder();
         makingOrder = true;
         on_tabWidget_currentChanged(5);
@@ -585,7 +640,8 @@ void mainScreen::on_completeOrder_clicked()
         timeOrder = new QTime(0,0,0);
         timerOrder = new QTimer(this);
 
-        ui->progressBar->setRange(0,orders->getTime().second());
+        int max = orders->getTime().second() + (orders->getTime().minute() * 60) + (orders->getTime().hour() * 120);
+        ui->progressBar->setRange(0, max);
         connect(timerOrder,SIGNAL(timeout()),this,SLOT(update()));
         timerOrder->start(1000);
     }
@@ -594,29 +650,76 @@ void mainScreen::update2()
 {
     *time = time->addSecs(-1);
     ui->timer->setText(time->toString("h:mm"));
+    if(time->hour() == 0 && time->minute() == 0 && time->second() == 0)
+    {
+        //CANNOT USE ANYTHING ON APP
+    }
 }
 void mainScreen::on_orderReceived_clicked()
 {
     timerOrder->stop();
     ui->progress->setText("COMPLETE");
-    ui->progressBar->setValue(orders->getTime().second());
-    showTimer();
-    makingOrder = false;
-
+    int max = orders->getTime().second() + (orders->getTime().minute() * 60) + (orders->getTime().hour() * 120);
+    ui->progressBar->setValue(max);
     if(!turnOnTimer)
     {
+        hideMakeOrder();
+        showTimer();
+        makingOrder = false;
         time = new QTime(2,0,0);
         timer = new QTimer(this);
         turnOnTimer = true;
-    }
-    ui->progressBar->setRange(0,orders->getTime().second());
-    connect(timer,SIGNAL(timeout()),this,SLOT(update2()));
-    timer->start(1000);
+        connect(timer,SIGNAL(timeout()),this,SLOT(update2()));
+        timer->start(1000);
 
+    }
+    else
+    {
+        hideMakeOrder();
+        showTimer();
+        makingOrder = false;
+    }
+    orders->clear();
+    ui->listWidget->clear();
+    ui->listWidget2->clear();
+    ui->remove->clear();
+    ui->remove->show();
+    ui->subtotal->setText("0.00");
+    ui->tax->setText("0.00");
+    ui->total->setText("0.00");
+    ui->completeOrder->show();
 }
 
 void mainScreen::on_end_clicked()
 {
+    if(makingOrder)
+    {
+        ui->notify2->setText("ORDER IS BEING MADE, PLEASE CANCEL ORDER");
+    }
+    else
+    {
+        orders->clear();
+        close();
+    }
+
+}
+
+void mainScreen::on_cancelOrder_clicked()
+{
     orders->clear();
-    close();
+    ui->listWidget->clear();
+    ui->listWidget2->clear();
+    ui->remove->clear();
+    ui->remove->show();
+    ui->subtotal->setText("0.00");
+    ui->tax->setText("0.00");
+    ui->total->setText("0.00");
+    ui->completeOrder->show();
+
+    timerOrder->stop();
+    hideMakeOrder();
+    showTimer();
+    makingOrder = false;
+    ui->notify2->setText("YOUR ORDER HAS BEEN CANCELED");
+
 }

@@ -72,6 +72,8 @@ private slots:
 
     void on_end_clicked();
 
+    void on_cancelOrder_clicked();
+
 public slots:
     void update();
     void update2();

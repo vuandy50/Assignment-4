@@ -116,6 +116,8 @@ public:
     QListWidget *listWidget2;
     QListWidget *remove;
     QLabel *notify;
+    QLabel *notify2;
+    QPushButton *cancelOrder;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -408,7 +410,7 @@ public:
         orderReceived->setGeometry(QRect(390, 130, 251, 23));
         hourLimit = new QLabel(cart);
         hourLimit->setObjectName(QString::fromUtf8("hourLimit"));
-        hourLimit->setGeometry(QRect(380, 220, 271, 20));
+        hourLimit->setGeometry(QRect(380, 230, 271, 20));
         hourLimit->setAlignment(Qt::AlignCenter);
         timer = new QLabel(cart);
         timer->setObjectName(QString::fromUtf8("timer"));
@@ -459,6 +461,13 @@ public:
         notify->setObjectName(QString::fromUtf8("notify"));
         notify->setGeometry(QRect(20, 60, 341, 21));
         notify->setAlignment(Qt::AlignCenter);
+        notify2 = new QLabel(cart);
+        notify2->setObjectName(QString::fromUtf8("notify2"));
+        notify2->setGeometry(QRect(380, 190, 271, 20));
+        notify2->setAlignment(Qt::AlignCenter);
+        cancelOrder = new QPushButton(cart);
+        cancelOrder->setObjectName(QString::fromUtf8("cancelOrder"));
+        cancelOrder->setGeometry(QRect(390, 160, 251, 23));
         tabWidget->addTab(cart, QString());
         mainScreen->setCentralWidget(centralwidget);
         menubar = new QMenuBar(mainScreen);
@@ -553,6 +562,8 @@ public:
         label_11->setText(QCoreApplication::translate("mainScreen", "$", nullptr));
         label_12->setText(QCoreApplication::translate("mainScreen", "$", nullptr));
         notify->setText(QString());
+        notify2->setText(QString());
+        cancelOrder->setText(QCoreApplication::translate("mainScreen", "CANCEL MY ORDER", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(cart), QCoreApplication::translate("mainScreen", "CART", nullptr));
     } // retranslateUi
 
