@@ -41,6 +41,8 @@ public:
     void addOrdertoHistory();
     void populateOrderHistory();
 
+    void displayBurgers();
+
 private slots:
     void on_addBurger1_clicked();
 
@@ -84,12 +86,17 @@ private slots:
 
     void on_viewOrderB_clicked();
 
+    void on_left_clicked();
+
+    void on_right_clicked();
+
 public slots:
     void update();
     void update2();
 private:
     Ui::mainScreen *ui;
     QSqlDatabase db;
+    QVector<item> noCombo;
     QVector<item> items;
     QVector<item> food;
     QVector<item> drink;
@@ -113,6 +120,8 @@ private:
     QString email;
     QVector<orderHistory> oh;
     int currentIndex;
+
+    int updateIndex;
 };
 
 #endif // MAINSCREEN_H

@@ -16,6 +16,7 @@ mainScreen::mainScreen(QWidget *parent) :
     date = new class date();
     ui->tabWidget->setCurrentIndex(0);
     currentIndex = -1;
+    updateIndex = 5;
 
 }
 mainScreen::~mainScreen()
@@ -141,14 +142,17 @@ void mainScreen::setVectors()
         if(items[i].getType() == "food")
         {
             food.push_back(items[i]);
+            noCombo.push_back(items[i]);
         }
         else if(items[i].getType() == "drink")
         {
             drink.push_back(items[i]);
+            noCombo.push_back(items[i]);
         }
         else if(items[i].getType() == "side")
         {
             sides.push_back(items[i]);
+            noCombo.push_back(items[i]);
         }
         else if(items[i].getType() == "combo")
         {
@@ -476,6 +480,10 @@ void mainScreen::on_tabWidget_currentChanged(int index)
     if(index == 0)
     {
 
+    }
+    else if(index == 2)
+    {
+        displayBurgers();
     }
     else if (index == 3)
     {
@@ -865,4 +873,44 @@ void mainScreen::on_viewOrderB_clicked()
         ui->OHtax->setText(QString::number(oh[currentIndex].calTax(),'f',2));
         ui->OHtotal->setText(QString::number(oh[currentIndex].calTotal(),'f',2));
     }
+}
+void mainScreen::displayBurgers()
+{
+    QPixmap pict1 = QPixmap();
+    ui->pic->setAlignment(Qt::AlignCenter);
+    if(!pict1.loadFromData(noCombo[updateIndex].getPic())){
+        qDebug() << ("Whoops.");
+    }
+    pict1 = pict1.scaled(ui->pic->size(),Qt::KeepAspectRatio);
+    ui->pic->setPixmap(pict1);
+
+    ui->cost->setText(QString::number(noCombo[updateIndex].getPrice(),'f',2));
+    ui->name->setText(noCombo[updateIndex].getItem());
+    ui->description->setText(noCombo[updateIndex].getDescription());
+}
+
+void mainScreen::on_left_clicked()
+{
+    if(updateIndex == 0)
+    {
+        updateIndex = noCombo.size() - 1;
+    }
+    else
+    {
+        updateIndex--;
+    }
+    on_tabWidget_currentChanged(2);
+}
+
+void mainScreen::on_right_clicked()
+{
+    if(updateIndex + 1 < noCombo.size())
+    {
+        updateIndex++;
+    }
+    else
+    {
+        updateIndex = 0;
+    }
+    on_tabWidget_currentChanged(2);
 }
