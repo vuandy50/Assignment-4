@@ -14,9 +14,10 @@ mainScreen::mainScreen(QWidget *parent) :
     turnOnTimer = false;
     orders = new order();
     date = new class date();
-    ui->tabWidget->setCurrentIndex(0);
+    ;
     currentIndex = -1;
     updateIndex = 5;
+    on_tabWidget_currentChanged(0);
 
 }
 mainScreen::~mainScreen()
@@ -478,6 +479,14 @@ void mainScreen::on_waterB_clicked()
 void mainScreen::on_tabWidget_currentChanged(int index)
 {
     if(index == 0)
+    {
+        QMovie *movie1 = new QMovie("impossible.gif");
+        movie1->setScaledSize(ui->gifAd->size());
+        ui->gifAd->setMovie(movie1);
+        movie1->start();
+
+    }
+    else if (index == 1)
     {
 
     }

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QListWidgetItem>
 #include <QTimer>
+#include <QMovie>
 #include <database.h>
 #include <QMap>
 #include <item.h>

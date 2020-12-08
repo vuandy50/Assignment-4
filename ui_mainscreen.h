@@ -30,7 +30,8 @@ public:
     QWidget *centralwidget;
     QTabWidget *tabWidget;
     QWidget *ads;
-    QWidget *widget;
+    QLabel *label_15;
+    QLabel *gifAd;
     QWidget *rewards;
     QWidget *update;
     QLabel *pic;
@@ -164,9 +165,15 @@ public:
         tabWidget->setGeometry(QRect(0, 1, 661, 931));
         ads = new QWidget();
         ads->setObjectName(QString::fromUtf8("ads"));
-        widget = new QWidget(ads);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(40, 30, 341, 291));
+        label_15 = new QLabel(ads);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+        label_15->setGeometry(QRect(70, 10, 511, 51));
+        label_15->setFrameShape(QFrame::Box);
+        label_15->setFrameShadow(QFrame::Plain);
+        label_15->setLineWidth(5);
+        gifAd = new QLabel(ads);
+        gifAd->setObjectName(QString::fromUtf8("gifAd"));
+        gifAd->setGeometry(QRect(40, 80, 571, 261));
         tabWidget->addTab(ads, QString());
         rewards = new QWidget();
         rewards->setObjectName(QString::fromUtf8("rewards"));
@@ -636,7 +643,7 @@ public:
 
         retranslateUi(mainScreen);
 
-        tabWidget->setCurrentIndex(2);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(mainScreen);
@@ -645,6 +652,8 @@ public:
     void retranslateUi(QMainWindow *mainScreen)
     {
         mainScreen->setWindowTitle(QCoreApplication::translate("mainScreen", "MainWindow", nullptr));
+        label_15->setText(QCoreApplication::translate("mainScreen", "<html><head/><body><p align=\"center\"><span style=\" font-size:18pt; font-weight:600;\">WELCOME TO SUPERSONIC</span></p></body></html>", nullptr));
+        gifAd->setText(QCoreApplication::translate("mainScreen", "TextLabel", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(ads), QCoreApplication::translate("mainScreen", "SPECIALS", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(rewards), QCoreApplication::translate("mainScreen", "REWARDS", nullptr));
         pic->setText(QCoreApplication::translate("mainScreen", "p", nullptr));
