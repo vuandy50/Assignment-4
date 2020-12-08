@@ -14,10 +14,8 @@ mainScreen::mainScreen(QWidget *parent) :
     turnOnTimer = false;
     orders = new order();
     date = new class date();
-    ;
     currentIndex = -1;
     updateIndex = 5;
-    ui->name->setText("WELCOME " + A.getFname());
     ui->tabWidget->setCurrentIndex(0);
 
 }
@@ -138,7 +136,7 @@ void mainScreen::populateOrderHistory()
 }
 void mainScreen::setNewRP()
 {
-    QString rewards = QString::number(A.getRewadpts() - orders->getRewardsPts());
+    QString rewards = QString::number(A.getRewadpts() - orders->getRewardsPts() + orders->calculateRewards());
     QSqlQuery *qry = new QSqlQuery(db);
 
     qry->prepare("UPDATE account SET RewardPoints = '"+rewards+"' WHERE Email = '"+A.getEmail()+"'");
@@ -505,6 +503,7 @@ void mainScreen::on_tabWidget_currentChanged(int index)
     }
     else if (index == 1)
     {
+        ui->greetings->setText("WELCOME " + A.getFname());
         updateRP();
         hideAll();
         showBigButtons();

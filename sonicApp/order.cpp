@@ -245,3 +245,30 @@ double order::getRewardsPts()
     }
     return reward;
 }
+double order::calculateRewards()
+{
+    double reward = 0;
+    for(int i = 0; i < individual.size(); i++)
+    {
+        if(individual[i].name.getPrice() != 0)
+        {
+            if(individual[i].name.getItem() == "COKE" || individual[i].name.getItem() == "SPRITE" || individual[i].name.getItem() == "DASANI WATER")
+            {
+                reward += 1;
+            }
+            else if(individual[i].name.getItem() == "FRIES" || individual[i].name.getItem() == "CHIPS")
+            {
+                reward += 2;
+            }
+            else if(individual[i].name.getItem() == "BURGER" || individual[i].name.getItem() == "CHEESEBURGER" || individual[i].name.getItem() == "IMPOSSIBLE BURGER")
+            {
+                reward += 5;
+            }
+            else if(individual[i].name.getItem() == "COMBO A" || individual[i].name.getItem() == "COMBO B" || individual[i].name.getItem() == "COMBO C")
+            {
+                reward += 10;
+            }
+        }
+    }
+    return reward;
+}

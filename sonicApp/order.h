@@ -36,6 +36,7 @@ public:
     void addFreeItem(individualItem temp);
     void addToMain();
     double getRewardsPts();
+    double calculateRewards();
 
     void addTime();
     void calculatePrice();
