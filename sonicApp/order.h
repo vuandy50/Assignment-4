@@ -33,6 +33,10 @@ public:
     void addDrink(item temp);
     void checkRepeatCombo();
 
+    void addFreeItem(individualItem temp);
+    void addToMain();
+    double getRewardsPts();
+
     void addTime();
     void calculatePrice();
     void makeReceipt();
@@ -55,6 +59,7 @@ private:
     double subtotal;
     double total;
     QTime *time;
+    QVector<individualItem> free;
 
 };
 

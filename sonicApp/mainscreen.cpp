@@ -488,7 +488,9 @@ void mainScreen::on_tabWidget_currentChanged(int index)
     }
     else if (index == 1)
     {
-
+        updateRP();
+        hideAll();
+        showBigButtons();
     }
     else if(index == 2)
     {
@@ -578,6 +580,7 @@ void mainScreen::on_tabWidget_currentChanged(int index)
         {
             hideMakeOrder();
             showTimer();
+            orders->addToMain();
             orders->calculatePrice();
             ui->listWidget->clear();
             ui->listWidget2->clear();
@@ -601,6 +604,7 @@ void mainScreen::on_tabWidget_currentChanged(int index)
         else
         {
             hideMakeOrder();
+            orders->addToMain();
             orders->calculatePrice();
             ui->listWidget->clear();
             ui->listWidget2->clear();
@@ -801,6 +805,7 @@ void mainScreen::on_orderReceived_clicked()
         makingOrder = false;
     }
     addOrdertoHistory();
+    //orders->getRewardsPts();
     orders->clear();
     ui->listWidget->clear();
     ui->listWidget2->clear();
@@ -922,4 +927,200 @@ void mainScreen::on_right_clicked()
         updateIndex = 0;
     }
     on_tabWidget_currentChanged(2);
+}
+void mainScreen::showBigButtons()
+{
+    ui->freeBurger->show();
+    ui->freeCombo->show();
+    ui->freeDrink->show();
+    ui->freeMask->show();
+    ui->freeSide->show();
+
+    ui->pts1->show();
+    ui->pts2->show();
+    ui->pts3->show();
+    ui->pts4->show();
+    ui->pts5->show();
+
+    ui->freeBurger->setDisabled(false);
+    ui->freeCombo->setDisabled(false);
+    ui->freeDrink->setDisabled(false);
+    ui->freeMask->setDisabled(false);
+    ui->freeSide->setDisabled(false);
+
+}
+void mainScreen::hideAll()
+{
+    ui->AButton->hide();
+    ui->BButton->hide();
+    ui->CButton->hide();
+
+    ui->chipsButton->hide();
+    ui->friesButton->hide();
+
+    ui->waterButton->hide();
+    ui->spriteButton->hide();
+    ui->cokeButton->hide();
+
+    ui->burgerButton->hide();
+    ui->cheeseButton->hide();
+    ui->impButton->hide();
+
+    ui->freeBurger->hide();
+    ui->freeCombo->hide();
+    ui->freeDrink->hide();
+
+    ui->freeSide->hide();
+    ui->freeMask->hide();
+    ui->SButton->hide();
+    ui->MButton->hide();
+    ui->LButton->hide();
+
+    ui->pts1->hide();
+    ui->pts2->hide();
+    ui->pts3->hide();
+    ui->pts4->hide();
+    ui->pts5->hide();
+}
+void mainScreen::updateRP()
+{
+    QSqlQuery *qry = new QSqlQuery(db);
+    qry->prepare("SELECT RewardPoints FROM account WHERE Email ='"+email+"'" );
+    if(qry->exec())
+    {
+        while(qry->next())
+        {
+            rewardPts = qry->value(0).toDouble();
+        }
+    }
+    else
+    {
+        qDebug("CANNOT POPULATE ITEMS");
+    }
+    ui->points->setText("REWARD POINTS: " + QString::number(rewardPts));
+}
+
+void mainScreen::on_freeDrink_clicked()
+{
+    if(rewardPts < 5)
+    {
+        ui->directions->setText("NOT ENOUGH POINTS!");
+    }
+    else
+    {
+        hideAll();
+        ui->waterButton->show();
+        ui->spriteButton->show();
+        ui->cokeButton->show();
+        ui->freeDrink->show();
+        ui->freeDrink->setDisabled(true);
+    }
+}
+
+void mainScreen::on_freeSide_clicked()
+{
+    if(rewardPts < 15)
+    {
+        ui->directions->setText("NOT ENOUGH POINTS!");
+    }
+    else
+    {
+        hideAll();
+        ui->chipsButton->show();
+        ui->friesButton->show();
+        ui->freeSide->show();
+        ui->freeSide->setDisabled(true);
+    }
+}
+
+void mainScreen::on_freeBurger_clicked()
+{
+    if(rewardPts < 30)
+    {
+        ui->directions->setText("NOT ENOUGH POINTS!");
+    }
+    else
+    {
+        hideAll();
+        ui->burgerButton->show();
+        ui->cheeseButton->show();
+        ui->impButton->show();
+        ui->freeBurger->show();
+        ui->freeBurger->setDisabled(true);
+    }
+}
+
+void mainScreen::on_freeCombo_clicked()
+{
+    if(rewardPts < 50)
+    {
+        ui->directions->setText("NOT ENOUGH POINTS!");
+    }
+    else
+    {
+        hideAll();
+        ui->AButton->show();
+        ui->BButton->show();
+        ui->CButton->show();
+        ui->freeCombo->show();
+        ui->freeCombo->setDisabled(true);
+    }
+}
+
+void mainScreen::on_freeMask_clicked()
+{
+    if(rewardPts < 75)
+    {
+        ui->directions->setText("NOT ENOUGH POINTS!");
+    }
+    else
+    {
+        hideAll();
+        ui->freeMask->show();
+        ui->SButton->show();
+        ui->MButton->show();
+        ui->LButton->show();
+        ui->freeMask->setDisabled(true);
+    }
+}
+
+void mainScreen::on_cokeButton_clicked()
+{
+    if(!ui->freeCombo->isEnabled())
+    {
+        freeItem->drink.setItem("COKE");
+        orders->addFreeItem(*freeItem);
+
+    }
+    else
+    {
+        freeItem = new individualItem();
+        freeItem->name.setItem("COKE");
+        freeItem->name.setPrice(0);
+        freeItem->quanity = 1;
+        orders->addFreeItem(*freeItem);
+
+    }
+    on_tabWidget_currentChanged(5);
+}
+
+void mainScreen::on_spriteButton_clicked()
+{
+
+    if(!ui->freeCombo->isEnabled())
+    {
+        freeItem->drink.setItem("SPRITE");
+        orders->addFreeItem(*freeItem);
+
+    }
+    else
+    {
+        freeItem = new individualItem();
+        freeItem->name.setItem("SPRITE");
+        freeItem->name.setPrice(0);
+        freeItem->quanity = 1;
+        orders->addFreeItem(*freeItem);
+
+    }
+    on_tabWidget_currentChanged(5);
 }

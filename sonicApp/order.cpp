@@ -196,3 +196,42 @@ void order::clear()
     total = 0;
     time = new QTime(0,0,0);
 }
+void order::addFreeItem(individualItem temp)
+{
+    free.push_back(temp);
+}
+void order::addToMain()
+{
+    for(int i = 0; i < free.size(); i++)
+    {
+        individual.push_back(free[i]);
+    }
+}
+double order::getRewardsPts()
+{
+    double reward = 0;
+    for(int i = 0; i < free.size(); i++)
+    {
+        if(free[i].name.getItem() == "COKE" || free[i].name.getItem() == "SPRITE" || free[i].name.getItem() == "DASANI WATER")
+        {
+            reward += 5;
+        }
+        else if(free[i].name.getItem() == "FRIES" || free[i].name.getItem() == "CHIPS")
+        {
+            reward += 15;
+        }
+        else if(free[i].name.getItem() == "BURGER" || free[i].name.getItem() == "CHEESEBURGER" || free[i].name.getItem() == "IMPOSSIBLE BURGER")
+        {
+            reward += 30;
+        }
+        else if(free[i].name.getItem() == "COMBO A" || free[i].name.getItem() == "COMBO B" || free[i].name.getItem() == "COMBO C")
+        {
+            reward += 50;
+        }
+        else if(free[i].name.getItem() == "FACEMASK S" || free[i].name.getItem() == "FACEMASK M" || free[i].name.getItem() == "FACEMASK L")
+        {
+            reward += 75;
+        }
+    }
+    return reward;
+}

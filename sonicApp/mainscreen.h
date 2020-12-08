@@ -44,6 +44,10 @@ public:
 
     void displayBurgers();
 
+    void showBigButtons();
+    void hideAll();
+    void updateRP();
+
 private slots:
     void on_addBurger1_clicked();
 
@@ -91,6 +95,20 @@ private slots:
 
     void on_right_clicked();
 
+    void on_freeDrink_clicked();
+
+    void on_freeSide_clicked();
+
+    void on_freeBurger_clicked();
+
+    void on_freeCombo_clicked();
+
+    void on_freeMask_clicked();
+
+    void on_cokeButton_clicked();
+
+    void on_spriteButton_clicked();
+
 public slots:
     void update();
     void update2();
@@ -123,6 +141,9 @@ private:
     int currentIndex;
 
     int updateIndex;
+
+    double rewardPts;
+    individualItem *freeItem;
 };
 
 #endif // MAINSCREEN_H
