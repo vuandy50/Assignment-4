@@ -11,6 +11,7 @@
 #include <order.h>
 #include <date.h>
 #include <orderhistory.h>
+#include <accountdb.h>
 namespace Ui {
 class mainScreen;
 }
@@ -38,7 +39,7 @@ public:
     void showMakeOrder();
     void showTimer();
 
-    void setEmail(QString e) {email = e;}
+    void setAccount(accountDB acc) {A = acc;}
     void addOrdertoHistory();
     void populateOrderHistory();
 
@@ -46,6 +47,7 @@ public:
 
     void showBigButtons();
     void hideAll();
+    void setNewRP();
     void updateRP();
 
 private slots:
@@ -109,6 +111,30 @@ private slots:
 
     void on_spriteButton_clicked();
 
+    void on_waterButton_clicked();
+
+    void on_friesButton_clicked();
+
+    void on_chipsButton_clicked();
+
+    void on_burgerButton_clicked();
+
+    void on_cheeseButton_clicked();
+
+    void on_impButton_clicked();
+
+    void on_AButton_clicked();
+
+    void on_BButton_clicked();
+
+    void on_CButton_clicked();
+
+    void on_SButton_clicked();
+
+    void on_MButton_clicked();
+
+    void on_LButton_clicked();
+
 public slots:
     void update();
     void update2();
@@ -136,14 +162,14 @@ private:
     bool turnOnTimer;
 
     date *date;
-    QString email;
     QVector<orderHistory> oh;
     int currentIndex;
 
     int updateIndex;
 
-    double rewardPts;
     individualItem *freeItem;
+
+    accountDB A;
 };
 
 #endif // MAINSCREEN_H

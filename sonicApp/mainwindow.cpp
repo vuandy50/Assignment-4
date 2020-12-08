@@ -16,25 +16,58 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label->setPalette(palette1);
     ui->label_2->setPalette(palette2);
     ui->label_3->setPalette(palette3);
+    populate();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
-void MainWindow::on_login_clicked()
+void MainWindow::populate()
 {
-    if(ui->email->text() == "username" && ui->password->text() == "password")
+    accountDB *newAccount;
+    QString first;
+    QString last;
+    QString email;
+    QString password;
+    double points;
+    QSqlQuery *qry = new QSqlQuery(data);
+
+    qry->prepare("SELECT * FROM account ");
+
+    if(qry->exec())
     {
-        QString email = "email";
-        mainScreen = new class mainScreen();
-        mainScreen->setEmail(email);
-        mainScreen->show();
+        while(qry->next())
+        {
+            first = qry->value(0).toString();
+            last = qry->value(1).toString();
+            email = qry->value(2).toString();
+            password = qry->value(3).toString();
+            points = qry->value(4).toDouble();
+            newAccount = new accountDB(first,last,email,password,points);
+            accounts.push_back(*newAccount);
+        }
     }
     else
     {
+         qDebug() << qry->lastError().text();
+    }
+}
+void MainWindow::on_login_clicked()
+{
+    int i;
+    for(i = 0; i < accounts.size(); i++)
+    {
+        if(ui->email->text() == accounts[i].getEmail() && ui->password->text() == accounts[i].getPassword())
+        {
+            mainScreen = new class mainScreen();
+            mainScreen->setAccount(accounts[i]);
+            mainScreen->show();
+        }
+    }
+    if(i == accounts.size())
+    {
         ui->label_3->setText("INVALID EMAIL/PASSWORD");
     }
+
 }

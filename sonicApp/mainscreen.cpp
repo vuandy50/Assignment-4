@@ -17,7 +17,8 @@ mainScreen::mainScreen(QWidget *parent) :
     ;
     currentIndex = -1;
     updateIndex = 5;
-    on_tabWidget_currentChanged(0);
+    ui->name->setText("WELCOME " + A.getFname());
+    ui->tabWidget->setCurrentIndex(0);
 
 }
 mainScreen::~mainScreen()
@@ -67,7 +68,7 @@ void mainScreen::addOrdertoHistory()
         qry->prepare("INSERT INTO orderHistory (Email, Quanity, Item, Side, Drink, DateTime, Price) "
                      "VALUES(?,?,?,?,?,?,?)");
 
-        qry->addBindValue(email);
+        qry->addBindValue(A.getEmail());
         qry->addBindValue(orders->getItems()[i].quanity);
         qry->addBindValue(orders->getItems()[i].name.getItem());
         qry->addBindValue(orders->getItems()[i].side.getItem());
@@ -88,7 +89,7 @@ void mainScreen::populateOrderHistory()
     QVector<QString> dateTime;
     orderHistory *ord;
 
-    qry->prepare("SELECT Quanity, Item, Side, Drink, DateTime, Price FROM orderHistory WHERE Email = '"+email+"'");
+    qry->prepare("SELECT Quanity, Item, Side, Drink, DateTime, Price FROM orderHistory WHERE Email = '"+A.getEmail()+"'");
 
     if(qry->exec())
     {
@@ -135,7 +136,23 @@ void mainScreen::populateOrderHistory()
     ord = new orderHistory(test,currentTime);
     oh.push_back(*ord);
 }
+void mainScreen::setNewRP()
+{
+    QString rewards = QString::number(A.getRewadpts() - orders->getRewardsPts());
+    QSqlQuery *qry = new QSqlQuery(db);
 
+    qry->prepare("UPDATE account SET RewardPoints = '"+rewards+"' WHERE Email = '"+A.getEmail()+"'");
+
+    if(qry->exec())
+    {
+
+    }
+    else
+    {
+        qDebug() << "Whoops";
+    }
+
+}
 void mainScreen::setVectors()
 {
     for(int i = 0; i < items.size(); i++)
@@ -499,7 +516,7 @@ void mainScreen::on_tabWidget_currentChanged(int index)
     else if (index == 3)
     {
         date->clear();
-        date->setEmail(email);
+        date->setEmail(A.getEmail());
         date->populateDates();
         date->organize();
         oh.clear();
@@ -507,7 +524,6 @@ void mainScreen::on_tabWidget_currentChanged(int index)
         ui->orderhistory->clear();
         ui->orderList->clear();
         ui->priceList->clear();
-        qDebug() << oh.size();
         for(int i = 0; i < oh.size(); i++)
         {
             QListWidgetItem *Hitem = new QListWidgetItem();
@@ -805,7 +821,7 @@ void mainScreen::on_orderReceived_clicked()
         makingOrder = false;
     }
     addOrdertoHistory();
-    //orders->getRewardsPts();
+    setNewRP();
     orders->clear();
     ui->listWidget->clear();
     ui->listWidget2->clear();
@@ -955,12 +971,23 @@ void mainScreen::hideAll()
     ui->BButton->hide();
     ui->CButton->hide();
 
+    ui->AButton->setDisabled(false);
+    ui->BButton->setDisabled(false);
+    ui->CButton->setDisabled(false);
+
     ui->chipsButton->hide();
     ui->friesButton->hide();
+
+    ui->chipsButton->setDisabled(false);
+    ui->friesButton->setDisabled(false);
 
     ui->waterButton->hide();
     ui->spriteButton->hide();
     ui->cokeButton->hide();
+
+    ui->waterButton->setDisabled(false);
+    ui->spriteButton->setDisabled(false);
+    ui->cokeButton->setDisabled(false);
 
     ui->burgerButton->hide();
     ui->cheeseButton->hide();
@@ -985,24 +1012,24 @@ void mainScreen::hideAll()
 void mainScreen::updateRP()
 {
     QSqlQuery *qry = new QSqlQuery(db);
-    qry->prepare("SELECT RewardPoints FROM account WHERE Email ='"+email+"'" );
+    qry->prepare("SELECT RewardPoints FROM account WHERE Email ='"+A.getEmail()+"'" );
     if(qry->exec())
     {
         while(qry->next())
         {
-            rewardPts = qry->value(0).toDouble();
+            A.setRewardpts( qry->value(0).toDouble());
         }
     }
     else
     {
         qDebug("CANNOT POPULATE ITEMS");
     }
-    ui->points->setText("REWARD POINTS: " + QString::number(rewardPts));
+    ui->points->setText("REWARD POINTS: " + QString::number(A.getRewadpts()));
 }
 
 void mainScreen::on_freeDrink_clicked()
 {
-    if(rewardPts < 5)
+    if(A.getRewadpts() < 5)
     {
         ui->directions->setText("NOT ENOUGH POINTS!");
     }
@@ -1019,7 +1046,7 @@ void mainScreen::on_freeDrink_clicked()
 
 void mainScreen::on_freeSide_clicked()
 {
-    if(rewardPts < 15)
+    if(A.getRewadpts() < 15)
     {
         ui->directions->setText("NOT ENOUGH POINTS!");
     }
@@ -1035,7 +1062,7 @@ void mainScreen::on_freeSide_clicked()
 
 void mainScreen::on_freeBurger_clicked()
 {
-    if(rewardPts < 30)
+    if(A.getRewadpts() < 30)
     {
         ui->directions->setText("NOT ENOUGH POINTS!");
     }
@@ -1052,7 +1079,7 @@ void mainScreen::on_freeBurger_clicked()
 
 void mainScreen::on_freeCombo_clicked()
 {
-    if(rewardPts < 50)
+    if(A.getRewadpts() < 50)
     {
         ui->directions->setText("NOT ENOUGH POINTS!");
     }
@@ -1069,7 +1096,7 @@ void mainScreen::on_freeCombo_clicked()
 
 void mainScreen::on_freeMask_clicked()
 {
-    if(rewardPts < 75)
+    if(A.getRewadpts() < 75)
     {
         ui->directions->setText("NOT ENOUGH POINTS!");
     }
@@ -1090,18 +1117,18 @@ void mainScreen::on_cokeButton_clicked()
     {
         freeItem->drink.setItem("COKE");
         orders->addFreeItem(*freeItem);
-
     }
     else
     {
         freeItem = new individualItem();
         freeItem->name.setItem("COKE");
+        freeItem->name.setType("drink");
         freeItem->name.setPrice(0);
         freeItem->quanity = 1;
         orders->addFreeItem(*freeItem);
 
     }
-    on_tabWidget_currentChanged(5);
+    ui->tabWidget->setCurrentIndex(5);
 }
 
 void mainScreen::on_spriteButton_clicked()
@@ -1117,10 +1144,207 @@ void mainScreen::on_spriteButton_clicked()
     {
         freeItem = new individualItem();
         freeItem->name.setItem("SPRITE");
+        freeItem->name.setType("drink");
         freeItem->name.setPrice(0);
         freeItem->quanity = 1;
         orders->addFreeItem(*freeItem);
 
     }
-    on_tabWidget_currentChanged(5);
+    ui->tabWidget->setCurrentIndex(5);
+}
+
+void mainScreen::on_waterButton_clicked()
+{
+    if(!ui->freeCombo->isEnabled())
+    {
+        freeItem->drink.setItem("DASANI WATER");
+        orders->addFreeItem(*freeItem);
+
+    }
+    else
+    {
+        freeItem = new individualItem();
+        freeItem->name.setItem("DASANI WATER");
+        freeItem->name.setType("drink");
+        freeItem->name.setPrice(0);
+        freeItem->quanity = 1;
+        orders->addFreeItem(*freeItem);
+
+    }
+    ui->tabWidget->setCurrentIndex(5);
+}
+
+void mainScreen::on_friesButton_clicked()
+{
+    if(!ui->freeCombo->isEnabled())
+    {
+        freeItem->side.setItem("FRIES");
+        ui->waterButton->show();
+        ui->spriteButton->show();
+        ui->cokeButton->show();
+        ui->freeDrink->show();
+        ui->freeDrink->setDisabled(true);
+        ui->chipsButton->setDisabled(true);
+        ui->friesButton->setDisabled(true);
+
+    }
+    else
+    {
+        freeItem = new individualItem();
+        freeItem->name.setItem("FRIES");
+        freeItem->name.setType("side");
+        freeItem->name.setPrice(0);
+        freeItem->quanity = 1;
+        orders->addFreeItem(*freeItem);
+        ui->tabWidget->setCurrentIndex(5);
+    }
+
+}
+
+void mainScreen::on_chipsButton_clicked()
+{
+    if(!ui->freeCombo->isEnabled())
+    {
+        freeItem->side.setItem("CHIPS");
+        ui->waterButton->show();
+        ui->spriteButton->show();
+        ui->cokeButton->show();
+        ui->freeDrink->show();
+        ui->freeDrink->setDisabled(true);
+        ui->chipsButton->setDisabled(true);
+        ui->friesButton->setDisabled(true);
+
+    }
+    else
+    {
+        freeItem = new individualItem();
+        freeItem->name.setItem("CHIPS");
+        freeItem->name.setType("side");
+        freeItem->name.setPrice(0);
+        freeItem->quanity = 1;
+        orders->addFreeItem(*freeItem);
+        ui->tabWidget->setCurrentIndex(5);
+    }
+
+}
+
+void mainScreen::on_burgerButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("BURGER");
+    freeItem->name.setType("food");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+    orders->addFreeItem(*freeItem);
+    ui->tabWidget->setCurrentIndex(5);
+}
+
+void mainScreen::on_cheeseButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("CHEESEBURGER");
+    freeItem->name.setType("food");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+    orders->addFreeItem(*freeItem);
+    ui->tabWidget->setCurrentIndex(5);
+}
+
+void mainScreen::on_impButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("IMPOSSIBLE BURGER");
+    freeItem->name.setType("food");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+    orders->addFreeItem(*freeItem);
+    ui->tabWidget->setCurrentIndex(5);
+}
+
+void mainScreen::on_AButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("COMBO A");
+    freeItem->name.setType("combo");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+
+
+    ui->chipsButton->show();
+    ui->friesButton->show();
+    ui->freeSide->show();
+    ui->AButton->setDisabled(true);
+    ui->BButton->setDisabled(true);
+    ui->CButton->setDisabled(true);
+    ui->freeSide->setDisabled(true);
+}
+
+void mainScreen::on_BButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("COMBO B");
+    freeItem->name.setType("combo");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+
+
+    ui->chipsButton->show();
+    ui->friesButton->show();
+    ui->freeSide->show();
+    ui->AButton->setDisabled(true);
+    ui->BButton->setDisabled(true);
+    ui->CButton->setDisabled(true);
+    ui->freeSide->setDisabled(true);
+}
+
+void mainScreen::on_CButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("COMBO C");
+    freeItem->name.setType("combo");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+
+
+    ui->chipsButton->show();
+    ui->friesButton->show();
+    ui->freeSide->show();
+    ui->AButton->setDisabled(true);
+    ui->BButton->setDisabled(true);
+    ui->CButton->setDisabled(true);
+    ui->freeSide->setDisabled(true);
+}
+
+void mainScreen::on_SButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("FACEMASK S");
+    freeItem->name.setType("");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+    orders->addFreeItem(*freeItem);
+    ui->tabWidget->setCurrentIndex(5);
+
+}
+
+void mainScreen::on_MButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("FACEMASK M");
+    freeItem->name.setType("");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+    orders->addFreeItem(*freeItem);
+    ui->tabWidget->setCurrentIndex(5);
+}
+
+void mainScreen::on_LButton_clicked()
+{
+    freeItem = new individualItem();
+    freeItem->name.setItem("FACEMASK L");
+    freeItem->name.setType("");
+    freeItem->name.setPrice(0);
+    freeItem->quanity = 1;
+    orders->addFreeItem(*freeItem);
+    ui->tabWidget->setCurrentIndex(5);
 }

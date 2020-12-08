@@ -1,3 +1,4 @@
+debug/accountdb.o
 debug/database.o
 debug/date.o
 debug/item.o

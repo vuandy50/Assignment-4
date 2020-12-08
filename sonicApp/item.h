@@ -19,6 +19,7 @@ public:
 
     void setItem(QString i) {itemName = i;}
     void setPrice(double p) {price = p;}
+    void setType (QString t) {type = t;}
 
 private:
     QString itemName;

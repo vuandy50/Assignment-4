@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="ads">
      <attribute name="title">
@@ -58,7 +58,7 @@
         <x>40</x>
         <y>80</y>
         <width>571</width>
-        <height>261</height>
+        <height>291</height>
        </rect>
       </property>
       <property name="text">
@@ -1926,7 +1926,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>ESTIMATED TIME: ~10 mins</string>
+       <string>ESTIMATED TIME: ~0 mins</string>
       </property>
      </widget>
      <widget class="QPushButton" name="orderReceived">

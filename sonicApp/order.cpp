@@ -118,6 +118,10 @@ void order::addTime()
         {
             seconds += 120 * individual[i].quanity;
         }
+        else
+        {
+            seconds += 1;
+        }
     }
     *time = time->addSecs(seconds);
 }
@@ -158,7 +162,9 @@ QString order::priceLine(int i)
 }
 bool order::ifCombo(int i)
 {
-    return(individual[i].name.getType() == "combo");
+    return(individual[i].name.getItem() == "COMBO A" ||
+           individual[i].name.getItem() == "COMBO B" ||
+           individual[i].name.getItem() == "COMBO C");
 }
 QString order::sideLine(int i)
 {
@@ -206,31 +212,35 @@ void order::addToMain()
     {
         individual.push_back(free[i]);
     }
+    free.clear();
 }
 double order::getRewardsPts()
 {
     double reward = 0;
-    for(int i = 0; i < free.size(); i++)
+    for(int i = 0; i < individual.size(); i++)
     {
-        if(free[i].name.getItem() == "COKE" || free[i].name.getItem() == "SPRITE" || free[i].name.getItem() == "DASANI WATER")
+        if(individual[i].name.getPrice() == 0)
         {
-            reward += 5;
-        }
-        else if(free[i].name.getItem() == "FRIES" || free[i].name.getItem() == "CHIPS")
-        {
-            reward += 15;
-        }
-        else if(free[i].name.getItem() == "BURGER" || free[i].name.getItem() == "CHEESEBURGER" || free[i].name.getItem() == "IMPOSSIBLE BURGER")
-        {
-            reward += 30;
-        }
-        else if(free[i].name.getItem() == "COMBO A" || free[i].name.getItem() == "COMBO B" || free[i].name.getItem() == "COMBO C")
-        {
-            reward += 50;
-        }
-        else if(free[i].name.getItem() == "FACEMASK S" || free[i].name.getItem() == "FACEMASK M" || free[i].name.getItem() == "FACEMASK L")
-        {
-            reward += 75;
+            if(individual[i].name.getItem() == "COKE" || individual[i].name.getItem() == "SPRITE" || individual[i].name.getItem() == "DASANI WATER")
+            {
+                reward += 5;
+            }
+            else if(individual[i].name.getItem() == "FRIES" || individual[i].name.getItem() == "CHIPS")
+            {
+                reward += 15;
+            }
+            else if(individual[i].name.getItem() == "BURGER" || individual[i].name.getItem() == "CHEESEBURGER" || individual[i].name.getItem() == "IMPOSSIBLE BURGER")
+            {
+                reward += 30;
+            }
+            else if(individual[i].name.getItem() == "COMBO A" || individual[i].name.getItem() == "COMBO B" || individual[i].name.getItem() == "COMBO C")
+            {
+                reward += 50;
+            }
+            else if(individual[i].name.getItem() == "FACEMASK S" || individual[i].name.getItem() == "FACEMASK M" || individual[i].name.getItem() == "FACEMASK L")
+            {
+                reward += 75;
+            }
         }
     }
     return reward;

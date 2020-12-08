@@ -1,3 +1,4 @@
+release/accountdb.o
 release/database.o
 release/date.o
 release/item.o

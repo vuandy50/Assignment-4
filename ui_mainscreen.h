@@ -201,7 +201,7 @@ public:
         label_15->setLineWidth(5);
         gifAd = new QLabel(ads);
         gifAd->setObjectName(QString::fromUtf8("gifAd"));
-        gifAd->setGeometry(QRect(40, 80, 571, 261));
+        gifAd->setGeometry(QRect(40, 80, 571, 291));
         tabWidget->addTab(ads, QString());
         rewards = new QWidget();
         rewards->setObjectName(QString::fromUtf8("rewards"));
@@ -767,7 +767,7 @@ public:
 
         retranslateUi(mainScreen);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(mainScreen);
@@ -890,7 +890,7 @@ public:
         completeOrder->setText(QCoreApplication::translate("mainScreen", "COMPLETE ORDER", nullptr));
         makingOrder->setText(QCoreApplication::translate("mainScreen", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:600;\">MAKING YOUR ORDER NOW</span></p></body></html>", nullptr));
         progress->setText(QCoreApplication::translate("mainScreen", "<html><head/><body><p>IN PROGRESS</p></body></html>", nullptr));
-        estTime->setText(QCoreApplication::translate("mainScreen", "ESTIMATED TIME: ~10 mins", nullptr));
+        estTime->setText(QCoreApplication::translate("mainScreen", "ESTIMATED TIME: ~0 mins", nullptr));
         orderReceived->setText(QCoreApplication::translate("mainScreen", "I RECEIVED MY ORDER", nullptr));
         hourLimit->setText(QCoreApplication::translate("mainScreen", "YOU HAVE A 2 HOUR LIMIT TO EAT AT SUPERSONIC", nullptr));
         timer->setText(QCoreApplication::translate("mainScreen", "hr:min", nullptr));
