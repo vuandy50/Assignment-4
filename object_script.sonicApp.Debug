@@ -1,0 +1,10 @@
+debug/database.o
+debug/date.o
+debug/item.o
+debug/main.o
+debug/mainscreen.o
+debug/mainwindow.o
+debug/order.o
+debug/orderhistory.o
+debug/moc_mainscreen.o
+debug/moc_mainwindow.o

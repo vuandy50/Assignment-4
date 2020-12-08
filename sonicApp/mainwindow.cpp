@@ -28,7 +28,9 @@ void MainWindow::on_login_clicked()
 {
     if(ui->email->text() == "username" && ui->password->text() == "password")
     {
+        QString email = "email";
         mainScreen = new class mainScreen();
+        mainScreen->setEmail(email);
         mainScreen->show();
     }
     else

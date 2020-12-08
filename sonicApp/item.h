@@ -17,6 +17,9 @@ public:
     double getPrice(){return price;}
     QByteArray getPic(){return pic;}
 
+    void setItem(QString i) {itemName = i;}
+    void setPrice(double p) {price = p;}
+
 private:
     QString itemName;
     QString type;

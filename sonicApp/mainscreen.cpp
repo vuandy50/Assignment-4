@@ -13,9 +13,11 @@ mainScreen::mainScreen(QWidget *parent) :
     makingOrder = false;
     turnOnTimer = false;
     orders = new order();
+    date = new class date();
     ui->tabWidget->setCurrentIndex(0);
-}
+    currentIndex = -1;
 
+}
 mainScreen::~mainScreen()
 {
     delete ui;
@@ -52,6 +54,86 @@ void mainScreen::populateItems()
     }
 
 }
+void mainScreen::addOrdertoHistory()
+{
+    QDateTime dateTime = QDateTime::currentDateTime();
+
+    QSqlQuery *qry = new QSqlQuery(db);
+
+    for(int i = 0; i < orders->size(); i++)
+    {
+        qry->prepare("INSERT INTO orderHistory (Email, Quanity, Item, Side, Drink, DateTime, Price) "
+                     "VALUES(?,?,?,?,?,?,?)");
+
+        qry->addBindValue(email);
+        qry->addBindValue(orders->getItems()[i].quanity);
+        qry->addBindValue(orders->getItems()[i].name.getItem());
+        qry->addBindValue(orders->getItems()[i].side.getItem());
+        qry->addBindValue(orders->getItems()[i].drink.getItem());
+        qry->addBindValue(dateTime.toString());
+        qry->addBindValue(orders->getItems()[i].price);
+        if (qry->exec()) {}
+        else {
+            qDebug() << qry->lastError().text();
+        }
+    }
+}
+void mainScreen::populateOrderHistory()
+{
+    QSqlQuery *qry = new QSqlQuery(db);
+    individualItem *items;
+    QVector<individualItem> temp;
+    QVector<QString> dateTime;
+    orderHistory *ord;
+
+    qry->prepare("SELECT Quanity, Item, Side, Drink, DateTime, Price FROM orderHistory WHERE Email = '"+email+"'");
+
+    if(qry->exec())
+    {
+        while(qry->next())
+        {
+            items = new individualItem;
+            items->quanity = qry->value(0).toInt();
+            items->name.setItem(qry->value(1).toString());
+            items->side.setItem(qry->value(2).toString());
+            items->drink.setItem(qry->value(3).toString());
+            dateTime.push_back(qry->value(4).toString());
+            items->price = qry->value(5).toDouble();
+            temp.push_back(*items);
+        }
+    }
+    else
+    {
+         qDebug() << qry->lastError().text();
+    }
+    QVector<individualItem> test;
+    QString currentTime = "";
+    for(int j = 0; j < temp.size(); j++)
+    {
+        if(test.isEmpty())
+        {
+            test.push_back(temp[j]);
+            currentTime = dateTime[j];
+        }
+        else if(dateTime[j] == currentTime)
+        {
+
+            test.push_back(temp[j]);
+        }
+        else
+        {
+            ord = new orderHistory(test,currentTime);
+            oh.push_back(*ord);
+            test.clear();
+            test.push_back(temp[j]);
+            currentTime = dateTime[j];
+
+        }
+    }
+    ord = new orderHistory(test,currentTime);
+    oh.push_back(*ord);
+}
+
 void mainScreen::setVectors()
 {
     for(int i = 0; i < items.size(); i++)
@@ -395,6 +477,28 @@ void mainScreen::on_tabWidget_currentChanged(int index)
     {
 
     }
+    else if (index == 3)
+    {
+        date->clear();
+        date->setEmail(email);
+        date->populateDates();
+        date->organize();
+        oh.clear();
+        populateOrderHistory();
+        ui->orderhistory->clear();
+        ui->orderList->clear();
+        ui->priceList->clear();
+        qDebug() << oh.size();
+        for(int i = 0; i < oh.size(); i++)
+        {
+            QListWidgetItem *Hitem = new QListWidgetItem();
+            QString output ="ORDER " + QString::number(i+1) + " (" + oh[i].getDateTime()+")";
+            Hitem->setText(output);
+            ui->orderhistory->addItem(Hitem);
+        }
+
+
+    }
     else if (index == 4)
     {
         if(turnOnTimer)
@@ -679,6 +783,7 @@ void mainScreen::on_orderReceived_clicked()
         showTimer();
         makingOrder = false;
     }
+    addOrdertoHistory();
     orders->clear();
     ui->listWidget->clear();
     ui->listWidget2->clear();
@@ -715,11 +820,49 @@ void mainScreen::on_cancelOrder_clicked()
     ui->tax->setText("0.00");
     ui->total->setText("0.00");
     ui->completeOrder->show();
-
-    timerOrder->stop();
-    hideMakeOrder();
-    showTimer();
     makingOrder = false;
     ui->notify2->setText("YOUR ORDER HAS BEEN CANCELED");
+    timerOrder->stop();
+    if(turnOnTimer)
+    {
+        hideMakeOrder();
+        showTimer();
+    }
+    else
+    {
+        hideMakeOrder();
+    }
 
+
+
+}
+
+void mainScreen::on_orderhistory_clicked(const QModelIndex &index)
+{
+    currentIndex = index.row();
+}
+
+void mainScreen::on_viewOrderB_clicked()
+{
+    if(currentIndex == -1)
+    {
+        ui->OHlabel->setText("PLEASE SELECT AN ORDER TO VIEW");
+    }
+    else
+    {
+        ui->orderList->clear();
+        ui->priceList->clear();
+        for(int i = 0; i < oh[currentIndex].getItems().size(); i++)
+        {
+            QListWidgetItem *item = new QListWidgetItem();
+            item->setText(oh[currentIndex].printItem(i));
+            ui->orderList->addItem(item);
+            QListWidgetItem *cost = new QListWidgetItem();
+            cost->setText(oh[currentIndex].priceLine(i));
+            ui->priceList->addItem(cost);
+        }
+        ui->OHsub->setText(QString::number(oh[currentIndex].calSub(),'f',2));
+        ui->OHtax->setText(QString::number(oh[currentIndex].calTax(),'f',2));
+        ui->OHtotal->setText(QString::number(oh[currentIndex].calTotal(),'f',2));
+    }
 }

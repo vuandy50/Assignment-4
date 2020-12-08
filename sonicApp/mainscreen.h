@@ -5,9 +5,11 @@
 #include <QListWidgetItem>
 #include <QTimer>
 #include <database.h>
+#include <QMap>
 #include <item.h>
 #include <order.h>
-
+#include <date.h>
+#include <orderhistory.h>
 namespace Ui {
 class mainScreen;
 }
@@ -34,6 +36,10 @@ public:
     void hideMakeOrder();
     void showMakeOrder();
     void showTimer();
+
+    void setEmail(QString e) {email = e;}
+    void addOrdertoHistory();
+    void populateOrderHistory();
 
 private slots:
     void on_addBurger1_clicked();
@@ -74,6 +80,10 @@ private slots:
 
     void on_cancelOrder_clicked();
 
+    void on_orderhistory_clicked(const QModelIndex &index);
+
+    void on_viewOrderB_clicked();
+
 public slots:
     void update();
     void update2();
@@ -98,6 +108,11 @@ private:
     QTime *time;
     QTimer *timer;
     bool turnOnTimer;
+
+    date *date;
+    QString email;
+    QVector<orderHistory> oh;
+    int currentIndex;
 };
 
 #endif // MAINSCREEN_H

@@ -11,18 +11,22 @@ CONFIG += c++11
 
 SOURCES += \
     database.cpp \
+    date.cpp \
     item.cpp \
     main.cpp \
     mainscreen.cpp \
     mainwindow.cpp \
-    order.cpp
+    order.cpp \
+    orderhistory.cpp
 
 HEADERS += \
     database.h \
+    date.h \
     item.h \
     mainscreen.h \
     mainwindow.h \
-    order.h
+    order.h \
+    orderhistory.h
 
 FORMS += \
     mainscreen.ui \
