@@ -1035,6 +1035,7 @@ void mainScreen::on_freeDrink_clicked()
     else
     {
         hideAll();
+        ui->directions->setText("");
         ui->waterButton->show();
         ui->spriteButton->show();
         ui->cokeButton->show();
@@ -1052,6 +1053,7 @@ void mainScreen::on_freeSide_clicked()
     else
     {
         hideAll();
+        ui->directions->setText("");
         ui->chipsButton->show();
         ui->friesButton->show();
         ui->freeSide->show();
@@ -1068,6 +1070,7 @@ void mainScreen::on_freeBurger_clicked()
     else
     {
         hideAll();
+        ui->directions->setText("");
         ui->burgerButton->show();
         ui->cheeseButton->show();
         ui->impButton->show();
@@ -1085,6 +1088,7 @@ void mainScreen::on_freeCombo_clicked()
     else
     {
         hideAll();
+        ui->directions->setText("");
         ui->AButton->show();
         ui->BButton->show();
         ui->CButton->show();
@@ -1102,6 +1106,7 @@ void mainScreen::on_freeMask_clicked()
     else
     {
         hideAll();
+        ui->directions->setText("");
         ui->freeMask->show();
         ui->SButton->show();
         ui->MButton->show();
