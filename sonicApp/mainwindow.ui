@@ -183,7 +183,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>../build-sonicApp-Desktop_Qt_5_15_1_MinGW_32_bit-Debug/burger_fries.jpg</pixmap>
+     <pixmap>../build-sonicApp-Desktop_Qt_6_1_1_MinGW_64_bit-Debug/burger_fries.jpg</pixmap>
     </property>
    </widget>
    <zorder>label_4</zorder>

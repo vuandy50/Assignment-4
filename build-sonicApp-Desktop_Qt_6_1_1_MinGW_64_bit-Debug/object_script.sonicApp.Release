@@ -1,0 +1,11 @@
+release/accountdb.o
+release/database.o
+release/date.o
+release/item.o
+release/main.o
+release/mainscreen.o
+release/mainwindow.o
+release/order.o
+release/orderhistory.o
+release/moc_mainscreen.o
+release/moc_mainwindow.o
